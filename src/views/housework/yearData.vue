@@ -16,9 +16,11 @@
                     <van-cell title="中鱼天数" :value="item.successNum" />
                     <van-cell title="打龟次数" :value="item.failNum" />
                     <van-cell title="鱼获数量" :value="item.fishNum" />
+                    <van-cell title="鱼获概览" :value="item.fishDesc" />
                     <van-cell title="放流数量" :value="item.fangNum" />
                     <van-cell title="打龟率" :value="item.rate" />
                     <van-cell title="最大中鱼天数间隔" :value="item.day" />
+                    <van-cell title="最大连龟" :value="item.maxFail" />
                     <van-cell title="花费" :value="item.spend" />
                 </van-cell-group>
                 </div>

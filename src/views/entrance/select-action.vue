@@ -45,7 +45,7 @@
                 </div>
                 <div class="module" @click="getFishList">
                     <img src="../../../src/assets/img/jilu.png"/>
-                    <p>出勤记录</p>
+                    <p>我的出勤</p>
                 </div>
             </div>
 

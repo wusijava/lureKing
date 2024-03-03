@@ -492,6 +492,7 @@
                 params.address=localStorage.getItem("addAll")
                 params.orderDate=this.orderDate;
                 params.num=this.value
+                params.getFish=1
                 if(!localStorage.getItem("lng")){
                     params.province='';
                     params.lng='';

@@ -16,6 +16,7 @@
                     <van-cell title="中鱼天数" :value="item.successNum" />
                     <van-cell title="打龟次数" :value="item.failNum" />
                     <van-cell title="鱼获数量" :value="item.fishNum" />
+                    <van-cell title="鱼获概览" :value="item.fishDesc" />
                     <van-cell title="去年同期数量" :value="item.fishNumLastYear" />
                     <van-cell title="放流数量" :value="item.fangNum" />
                     <van-cell title="打龟率" :value="item.rate" />
