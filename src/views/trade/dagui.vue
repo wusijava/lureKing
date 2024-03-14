@@ -7,17 +7,7 @@
         <van-cell-group>
 
 
-            <img src="../../../src/assets/img/fj.jpg"  style="width:100%"/>
-            <van-popup v-model="showStartDate" position="bottom">
-                <van-datetime-picker
-                        title="选择时间"
-                        type="date"
-                        :min-date="minDate"
-                        :max-date="maxDate"
-                        @confirm="onConfirmDate"
-                        @cancel="onCancelDate"
-                />
-            </van-popup>
+            <img src="../../../src/assets/img/fj.png"  style="width:100%"/>
 
 
 
@@ -96,11 +86,29 @@
                 label-width="110"
                 label="打龟备注"
                 type="text"
-        style="margin-top: 40px">
+        style="margin-top: 10px">
         </van-field>
-
-        <van-cell style="color: #cf2d28;margin-top: 50px;size: 40px" v-if="this.province!=null" > {{this.province}}</van-cell>
-        <van-cell style="color: #cf2d28;margin-top: 50px;size: 40px;" v-if="this.province==null"> 自动获取定位失败，无法存储位置信息!</van-cell>
+        <van-field
+                readonly
+                clickable
+                name="datetimePicker"
+                :value="orderDate"
+                placeholder="请选择打龟时间(当天登记，不用选择)"
+                @click="showStartDate = true"
+        />
+        <van-popup v-model="showStartDate" position="bottom">
+            <van-datetime-picker
+                    title="选择打龟时间"
+                    type="date"
+                    :min-date="minDate"
+                    :max-date="maxDate"
+                    @confirm="onConfirmDate"
+                    @cancel="onCancelDate"
+            />
+        </van-popup>
+        <van-cell  > 如需补录，请点击日期修改 ↑</van-cell>
+        <van-cell style="color: #cf2d28;margin-top: 10px;size: 40px" v-if="this.province!=null" > {{this.province}}</van-cell>
+        <van-cell style="color: #cf2d28;margin-top: 10px;size: 40px;" v-if="this.province==null"> 自动获取定位失败，无法存储位置信息!</van-cell>
         <div class="box2" style="margin: 15px">
             <van-button class="button" @click="submit" type="info" size="large" :loading="loading">又是打龟的一天！操！</van-button>
         </div>
@@ -127,19 +135,18 @@
         name: "dagui",
         data() {
             return {
-                minDate: new Date(new Date().getTime()-(1000*60*60*24*5)),
+                minDate: new Date(new Date().getTime()-(1000*60*60*24*7)),
                 maxDate: new Date(),
                 loading: false,
                 showStartDate: false,
                 showForm: true,
                 detail: {},
                 remark: '',
-                orderDate: '',
+                orderDate: moment(new Date()).format('YYYY-MM-DD'),
                 myOrderNo: '',
                 buyMoney: '',
                 sellMoney: '',
                 product: '',
-                myOrderNo: '',
                 buyerName: '',
                 customerCertNo: '',
                 showPicker: false,
@@ -339,6 +346,9 @@
                     params.city='';
                     params.district='';
                     params.address='';
+                }
+                if(this.orderDate){
+                    params.date=this.orderDate;
                 }
                 const result = await saveFish(params)
                 if(result.data.code == '20000') {

@@ -513,6 +513,20 @@ export default new Router({
             meta: {
                 title: '好物推荐'
             }
+        },
+        {    path: '/firstFish',
+            name: 'firstFish',
+            component: () => import('./views/housework/firstFish.vue'),
+            meta: {
+                title: '解锁鱼种'
+            }
+        },
+        {    path: '/waterLevelNew',
+            name: 'waterLevelNew',
+            component: () => import('./views/paiBan/waterLevelNew.vue'),
+            meta: {
+                title: '长江水文'
+            }
         }
 
     ]

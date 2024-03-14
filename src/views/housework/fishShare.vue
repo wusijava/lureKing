@@ -18,13 +18,35 @@
                         type="text"
                         v-model.trim="query.fishKind"
                 />
-                <van-field
+               <!-- <van-field
                         name="鱼种"
                         placeholder="输入大师名字"
                         clearable
                         type="text"
                         v-model.trim="query.userName"
-                />
+                />-->
+
+                <van-field
+                        readonly
+                        clickable
+                        :value="area"
+                        placeholder="请选择鱼种"
+                        @click="showArea = true"
+                >
+                </van-field>
+                <van-popup
+                        v-model="showArea"
+                        position="bottom"
+                        :style="{ height: '50%' }"
+                        round
+                >
+                    <van-area :area-list="fishList"
+                              value="420000"
+                              :columns-num="1"
+                              @confirm="confirmArea"
+                              @cancel="onCancelArea"
+                    />
+                </van-popup>
 
                 <van-popup v-model="showStartDate" position="bottom">
                     <van-datetime-picker
@@ -120,6 +142,7 @@
                         <van-cell title="中鱼大师：" :value="item.name" />
                         <van-cell title="大小：" :value="item.size" />
                         <van-cell title="用饵：" :value="item.lure" />
+                        <van-cell title="放油/放流：" :value="item.use" />
 
                         <div class="detail-main">
                             <img :src=item.imageUrl style="width: 100%;height:100%" v-if="item.url!=null&&item.url!=''" >

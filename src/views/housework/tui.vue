@@ -111,14 +111,14 @@
                     <div class="detail-main">
                             <img :src=item.url style="width: 100%;height:100%" v-if="item.url!=null&&item.url!=''" >
                     </div>
-                    <van-col span="12" style="text-align: right">
+                   <!-- <van-col span="12" style="text-align: right">
                         <van-button type="info" plain hairline round size="large" class="btn-small" @click="refund(item)"  v-if="item.price!=0" style="margin-left: 70px">
                             退款
                         </van-button>
-                    </van-col>
-                <template #right>
+                    </van-col>-->
+                <!--<template #right>
                     <van-button square type="danger" text="删除" style="margin-top: 45px;margin-left: 10px" @click="cl(item.id)"/>
-                </template>
+                </template>-->
             </van-swipe-cell>
             </div>
             <van-button class="button" @click="back" type="info" size="large" >回菜单</van-button>

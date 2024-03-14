@@ -81,6 +81,7 @@
                     query.username = this.username
                     query.password = this.password
                     login(query).then(json =>{
+                        console.log(JSON.stringify(json))
                         if(json.data.code === '20000') {
                             localStorage.setItem('login_token', json.headers.authorization);
                             localStorage.setItem('username', json.data.data.username);

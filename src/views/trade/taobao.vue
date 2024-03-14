@@ -203,12 +203,8 @@
         </div>
     </div>
 
-    <div v-else-if="showForm === false">
 
-    </div>
-    <div v-else style="margin-top: 40%">
-        <van-loading type="spinner" color="#1989fa"/>
-    </div>
+
 </template>
 
 <script>
@@ -217,7 +213,7 @@
     import Vue from "vue";
     import {ImagePreview} from "vant";
     Vue.use(ImagePreview);
-    import {createSell,getFishList,getLureList,saveFish} from '../../api/trade'
+    import {getFishList,getLureList,saveFish} from '../../api/trade'
     import {getUploadToken} from "../../api/upload";
     import {location} from "../../assets/js/location";
     export default {
@@ -237,7 +233,6 @@
                 buyMoney: '',
                 sellMoney: '',
                 product: '',
-                myOrderNo: '',
                 buyerName: '',
                 customerCertNo: '',
                 showPicker: false,

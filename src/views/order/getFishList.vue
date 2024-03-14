@@ -2,7 +2,7 @@
     <div class="box">
         <van-notice-bar
                 left-icon="volume-o"
-                text="记录路亚鱼获,鳜鱼，翘嘴，红尾，鲶鱼，白条，马口，鳡鱼，祝君暴扣..."
+                text="记录真实的野钓路亚数据，野钓路亚难，保持良好心态，当做锻炼身体来玩！"
         />
         <div class="header">
             <van-button icon="filter-o" type="info" block size="small" @click="showPopup" class="filter-head">筛选</van-button>
@@ -153,8 +153,12 @@
 
 <script>
     import moment from 'moment';
+    import Vue from 'vue';
+    import { Dialog } from 'vant';
+    import { Toast } from 'vant';
+    Vue.use(Toast);
     import areaJson from '@/util/fish'
-    import {taoList,taoDetail} from "../../api/order";
+    import {deleteFish,taoList,taoDetail} from "../../api/order";
     export default {
         name: 'getFishList',
         data() {
@@ -351,7 +355,7 @@
                             instance.close();
                             let query = {}
                             query.id = this.rowId
-                            deleteRow(query)
+                            deleteFish(query)
                             Notify({
                                 message: '删除成功了,伙计!',
                                 color: '#ad0000',
@@ -362,7 +366,9 @@
                         });
                         break;
                 }
-            },
+            },cl(id){
+                this.rowId=id
+            }
         }
     }
 </script>

@@ -14,6 +14,7 @@
                     <van-cell title="名次" :value="item.index" />
                     <van-cell title="姓名" :value="item.name" />
                     <van-cell title="条数" :value="item.num" />
+                    <van-cell title="鱼获概览" :value="item.desc" />
                 </van-cell-group>
                 </div>
             <van-button class="button" @click="back" type="info" size="large" style="margin-top: 10px" >返回菜单</van-button>

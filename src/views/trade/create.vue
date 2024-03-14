@@ -12,7 +12,7 @@
             <h4 style="text-align: center">装备一大堆，天天打大龟</h4>
             <h4 style="text-align: center">台钓毁一生，路亚穷三代</h4>
             <h4 style="text-align: center">劝君早退坑，回头才是岸</h4>-->
-            <img src="../../../src/assets/img/x.jpg"  style="width:100%"/>
+            <img src="../../../src/assets/img/zs.png"  style="width:100%"/>
             <van-field
                     v-model.trim="item"
                     clearable

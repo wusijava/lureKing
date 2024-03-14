@@ -81,10 +81,9 @@ const method = {
         fishDayCount: '/api/fishDayCount',
         guiWang: '/api/guiWang',
         spendPai: '/api/spendPai',
-        deleteFish: 'api/deleteFish'
-
-
-
+        deleteFish: 'api/deleteFish',
+        firstFish: 'api/firstFish',
+        waterLevelNew: 'waterLevelNew/getWaterLevelList',
     },
     upload:{
         getUploadToken:'/upload/getToken'

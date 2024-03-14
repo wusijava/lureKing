@@ -2,56 +2,71 @@
     <div class="box">
         <van-notice-bar
                 left-icon="volume-o"
-                text="将登记在系统的所有鱼获进行按月统计排名，同样数量的按时间先后区分，没有同等名次，欢迎各位大师踊跃打榜！！"
+                text="时刻关注水位,科学分析,才能获得更多更大的鱼获!!!奥力给!!!数据来自官网长江水文网"
         />
 
 
 
-        <div class="content">
-            <van-empty image="search" description="还没有大师上榜，还需努力啊!" v-show="showEmpty"/>
-            <div class="list" v-for="item in list" :key="item.id" >
-                <van-cell-group >
-                    <van-cell title="名次" :value="item.index" />
-                    <van-cell title="姓名" :value="item.name" />
-                    <van-cell title="条数" :value="item.num" />
-                    <van-cell title="鱼获概览" :value="item.desc" />
-                </van-cell-group>
-                </div>
-            <van-button class="button" @click="back" type="info" size="large" style="margin-top: 10px" >返回菜单</van-button>
-        </div>
+            <table >
+            <div  v-for="item in list" :key="item.id" style="width: 100%;margin-left: 80px;margin-top: 20px">
+                            <tr  v-for="d in item.list" :key="d.id"  >
+                                <td style="width: fit-content" v-if="d.stnm!='汉口'">{{d.stnm}}</td>
+                                <td style="width: fit-content;color: red" v-if="d.stnm=='汉口'">{{d.stnm}}</td>
+                                <td style="width: fit-content" >{{item.createTime}}</td>
+                                <td style="width: fit-content" v-if="d.stnm!='汉口'">{{d.z}}</td>
+                                <td style="width: fit-content;color: #cf2d28" v-if="d.stnm=='汉口'">{{d.z}}</td>
+                            </tr>
 
+            </div>
+            </table>
+            <van-cell title="搜索,点击右侧，弹出日历-＞" :value="date" @click="show = true" style="margin-top: 20px;margin-bottom: 20px"/>
+            <van-calendar v-model="show" @confirm="onConfirm1" type="range" allow-same-day  :min-date="minDate"/>
+            <van-button class="button" @click="toSearch(0)" type="warning" size="large" style="margin-bottom: 10px">日期查询</van-button>
+           <!-- <van-button class="button" @click="getWaterLevel" type="primary" size="large" style="margin-bottom: 10px">获取水位</van-button>-->
+            <van-button class="button" @click="back" type="info" size="large" >返回菜单</van-button>
+        <van-dialog v-model="inputPassword" title="今日水位" show-cancel-button @confirm="submitShow" @cancel="cancelInput">
+            <van-field v-model="lookPwd" label="今日水位" type="text" autofocus clearable/>
+        </van-dialog>
+
+        <div class="footer">
+            <van-pagination v-model="currentPage" :page-count="pageTotal" mode="simple" @change="changePage"/>
+        </div>
     </div>
 </template>
 
 <script>
-    import {sort,receiveWork} from "../../api/order";
+    import {waterLevelNew,changeWaterLevel} from "../../api/order";
     import Vue from 'vue';
     import { Toast } from 'vant';
     import { DropdownMenu, DropdownItem } from 'vant';
-    import { DatetimePicker } from 'vant';
-
-    Vue.use(DatetimePicker);
     Vue.use(DropdownMenu);
     Vue.use(DropdownItem);
     Vue.use(Toast);
     export default {
-        name: 'sortMonth',
+        name: 'waterLevel',
         data() {
             return {
-                miniDate:  new Date(2010, 0, 1),
-                showEmpty: false,
-                date: '',
+                rowId : '',
+                lookPwd: '',
+                inputPassword: false,
+                minDate: new Date(2019, 1, 1),
                 show: false,
+                url: '',
+                showDetails: false,
                 list: [],
                 currentPage: 0,
                 pageTotal: 0,
                 value1: '',
                 option1: [
                     { text: '全部', value: '' },
-                    { text: '未处理', value: '0' },
-                    { text: '已处理', value: 1 },
+                    { text: '未中奖', value: '0' },
+                    { text: '已中奖', value: 1 },
                 ],
-
+                spend: '',
+                bonus: '',
+                date: '',
+                startTime: '',
+                endTime: ''
 
 
 
@@ -73,17 +88,26 @@
                 let params = {};
                 params.page = cp;
                 params.limit = c;
-                if(this.date!=null||this.date!=''){
-                    params.startTime = this.date;
+                if(this.startTime){
+                    params.startTime=this.startTime
                 }
-                params.type= 'month'
-                const result = await sort(params);
+                if(this.endTime){
+                    params.endTime=this.endTime
+                }
+                this.$toast.loading({
+                    duration: 0, // 持续展示 toast
+                    forbidClick: true,
+                    message: '请稍后...',
+                });
+                const result = await waterLevelNew(params);
                 this.$toast.clear();
-                console.log(result.data.data)
+                console.log(result.data.data.content)
                 if (result.data.code == '20000') {
-                    if(result.data.data.length > 0) {
+                    if(result.data.data.content.length > 0) {
                         this.showEmpty = false;
-                        this.list = result.data.data;
+                        this.list = result.data.data.content;
+                        console.log(this.list)
+                        this.pageTotal = result.data.data.totalPages;
                     }else {
                         this.showEmpty = true;
                         this.list = [];
@@ -103,54 +127,53 @@
             back(){
                 this.$router.push({name:'selectAction'});
             },
-            doJob: async function(id,state,stateType){
-                let params = {};
-                params.id=id
-                params.state=state
-                params.stateType=stateType
-                const result = await receiveWork(params);
-                if (result.data.code == '20000') {
-                    const toast = Toast.loading({
-                        duration: 0, // 持续展示 toast
-                        forbidClick: true,
-                        message: '正在处理,剩余3 秒',
-                    });
-
-                    let second = 3;
-                    const timer = setInterval(() => {
-                        second--;
-                        if (second) {
-                            toast.message = `正在处理,剩余 ${second} 秒`;
-                        } else {
-                            clearInterval(timer);
-                            // 手动清除 Toast
-                            Toast.clear();
-                        }
-                    }, 1000);
-                    let getist = 3;
-                    const time = setInterval(() => {
-                        getist--;
-                        if (getist) {
-                        } else {
-                            clearInterval(time);
-                            this.getList(this.currentPage - 1, 10);
-                        }
-                    }, 1000);
-                }
-            },
             changeValue:async function(){
                 this.getList(this.currentPage - 1, 10);
-                console.log(this.value1)
+            },
+            toDetails(url){
+                this.showDetails=true
+                this.url=url
+            },
+            onConfirm1(date) {
+                this.show = false;
+                const [start, end] = date;
+                this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`;
+                this.startTime=this.formatDate(start)
+                this.endTime=this.formatDate(end)
             },
             formatDate(date) {
                 return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
             },
-            onConfirm1(date) {
-                this.show = false;
-                this.date = this.formatDate(date);
-            },
-            query(){
-                this.getList(this.currentPage - 1, 10);
+            seeNet(href){
+                console.log(href)
+                window.open(href)
+            }, changeWater(id){
+                this.inputPassword=true
+                this.rowId=id;
+
+            },submitShow: async function(){
+                let params = {};
+                params.id = this.rowId;
+                params.value=this.lookPwd
+                console.log(params)
+                const result = await changeWaterLevel(params);
+                console.log(result)
+                if (result.status == '200') {
+                    this.$toast({
+                        message: "修改成功",
+                        icon: 'warning-o'
+                    });
+                    this.getList(this.currentPage - 1, 10);
+                    this.lookPwd=''
+                    this.inputPassword=false
+                }else {
+                    this.$toast({
+                        message: result.data.msg,
+                        icon: 'warning-o'
+                    });
+                }
+            },cancelInput(){
+                this.inputPassword=false
             }
         }
     }
@@ -347,5 +370,16 @@
         width: 90%;
         height:40px;
         z-index: 999;
+    }
+    table td {
+        width: 100%;
+    }
+    table td,
+    table th {
+        border: 1px black solid;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
     }
 </style>

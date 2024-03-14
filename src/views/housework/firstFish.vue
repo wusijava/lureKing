@@ -2,19 +2,16 @@
     <div class="box">
         <van-notice-bar
                 left-icon="volume-o"
-                text="将登记在系统的所有鱼获进行按月统计排名，同样数量的按时间先后区分，没有同等名次，欢迎各位大师踊跃打榜！！"
+                text="展示已解锁鱼种类别，解锁地点，解锁时间,当天天气情况等信息！"
         />
-
-
-
         <div class="content">
-            <van-empty image="search" description="还没有大师上榜，还需努力啊!" v-show="showEmpty"/>
+            <van-empty image="search" description="暂无解锁鱼种" v-show="showEmpty"/>
             <div class="list" v-for="item in list" :key="item.id" >
                 <van-cell-group >
-                    <van-cell title="名次" :value="item.index" />
-                    <van-cell title="姓名" :value="item.name" />
-                    <van-cell title="条数" :value="item.num" />
-                    <van-cell title="鱼获概览" :value="item.desc" />
+                    <van-cell title="鱼种" :value="item.fish" />
+                    <van-cell title="解锁时间" :value="item.time" />
+                    <van-cell title="解锁地点 " :value="item.address" />
+                    <van-cell title="天气" :value="item.weather" />
                 </van-cell-group>
                 </div>
             <van-button class="button" @click="back" type="info" size="large" style="margin-top: 10px" >返回菜单</van-button>
@@ -24,7 +21,7 @@
 </template>
 
 <script>
-    import {sort,receiveWork} from "../../api/order";
+    import {firstFish,receiveWork} from "../../api/order";
     import Vue from 'vue';
     import { Toast } from 'vant';
     import { DropdownMenu, DropdownItem } from 'vant';
@@ -35,7 +32,7 @@
     Vue.use(DropdownItem);
     Vue.use(Toast);
     export default {
-        name: 'sortMonth',
+        name: 'firstFish',
         data() {
             return {
                 miniDate:  new Date(2010, 0, 1),
@@ -51,11 +48,6 @@
                     { text: '未处理', value: '0' },
                     { text: '已处理', value: 1 },
                 ],
-
-
-
-
-
             }
         },
         mounted() {
@@ -71,13 +63,8 @@
             },
             getList: async function(cp,c) {
                 let params = {};
-                params.page = cp;
-                params.limit = c;
-                if(this.date!=null||this.date!=''){
-                    params.startTime = this.date;
-                }
-                params.type= 'month'
-                const result = await sort(params);
+                params.type= 'year'
+                const result = await firstFish(params);
                 this.$toast.clear();
                 console.log(result.data.data)
                 if (result.data.code == '20000') {

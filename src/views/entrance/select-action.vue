@@ -70,6 +70,16 @@
                 </div>
             </div>
             <div style="margin-top: 25px">
+                <div class="module" style="margin-right: 25px" @click="yearData">
+                    <img src="../../../src/assets/img/data.png"/>
+                    <p>年度数据</p>
+                </div>
+                <div class="module" @click="fishData">
+                    <img src="../../../src/assets/img/cq.png"/>
+                    <p>月度数据</p>
+                </div>
+            </div>
+            <div style="margin-top: 25px">
                 <div class="module" style="margin-right: 25px" @click="weatherRouter">
                     <img src="../../../src/assets/img/wea.png"/>
                     <p>天气预报</p>
@@ -77,16 +87,6 @@
                 <div class="module"  @click="waterLevel">
                     <img src="../../../src/assets/img/sw.png"/>
                     <p>长江水位</p>
-                </div>
-            </div>
-            <div style="margin-top: 25px">
-                <div class="module" style="margin-right: 25px" @click="changePassWord">
-                    <img src="../../../src/assets/img/mm.png"/>
-                    <p>修改密码</p>
-                </div>
-                <div class="module" @click="fishData">
-                    <img src="../../../src/assets/img/cq.png"/>
-                    <p>出勤数据</p>
                 </div>
             </div>
             <div style="margin-top: 25px">
@@ -113,9 +113,10 @@
 
             </div>-->
             <div style="margin-top: 25px">
-                <div class="module" style="margin-right: 25px" @click="yearData">
-                    <img src="../../../src/assets/img/data.png"/>
-                    <p>年度数据</p>
+
+                <div class="module" style="margin-right: 25px" @click="changePassWord">
+                    <img src="../../../src/assets/img/mm.png"/>
+                    <p>修改密码</p>
                 </div>
                 <div class="module" @click="logout">
                     <img src="../../../src/assets/img/out.png"/>
@@ -123,9 +124,9 @@
                 </div>
             </div>
             <div style="margin-top: 25px">
-                <div class="module" style="margin-right: 25px" @click="geti">
-                    <img src="../../../src/assets/img/dym.png"/>
-                    <p>个人纪录</p>
+                <div class="module" style="margin-right: 25px" @click="sortMonth">
+                    <img src="../../../src/assets/img/ph.png"/>
+                    <p>月度排行</p>
                 </div>
                 <div class="module" @click="sort">
                     <img src="../../../src/assets/img/mc.png"/>
@@ -137,9 +138,9 @@
                     <img src="../../../src/assets/img/dn.png"/>
                     <p>总排行榜</p>
                 </div>
-                <div class="module" @click="sortMonth">
-                    <img src="../../../src/assets/img/ph.png"/>
-                    <p>月度排行</p>
+                <div class="module" @click="fishDayCount">
+                    <img src="../../../src/assets/img/ts.png"/>
+                    <p>天数统计</p>
                 </div>
             </div>
             <div style="margin-top: 25px">
@@ -153,33 +154,43 @@
                 </div>
             </div>
             <div style="margin-top: 25px">
-                <div class="module" style="margin-right: 25px" @click="fishDayCount">
-                    <img src="../../../src/assets/img/ts.png"/>
-                    <p>天数统计</p>
-                </div>
-                <div class="module" @click="guiWang">
+                <div class="module" style="margin-right: 25px" @click="guiWang">
                     <img src="../../../src/assets/img/gw.png"/>
                     <p>月度龟王</p>
                 </div>
-            </div>
-            <div style="margin-top: 25px">
-                <div class="module" style="margin-right: 25px" @click="guiWangYear">
+                <div class="module" @click="guiWangYear">
                     <img src="../../../src/assets/img/ygw.png"/>
                     <p>年度龟王</p>
                 </div>
-                <div class="module" @click="spendPai">
-                    <img src="../../../src/assets/img/money.png"/>
-                    <p>花费排行</p>
+            </div>
+            <div style="margin-top: 25px">
+                <div class="module" style="margin-right: 25px" @click="geti">
+                    <img src="../../../src/assets/img/dym.png"/>
+                    <p>个人纪录</p>
+                </div>
+                <div class="module" @click="max">
+                    <img src="../../../src/assets/img/max.png"/>
+                    <p>群友纪录</p>
                 </div>
             </div>
             <div style="margin-top: 25px">
-                <div class="module" style="margin-right: 25px" @click="max">
-                    <img src="../../../src/assets/img/max.png"/>
-                    <p>群友纪录</p>
+                <div class="module" style="margin-right: 25px" @click="spendPai">
+                    <img src="../../../src/assets/img/money.png"/>
+                    <p>花费排行</p>
                 </div>
                 <div class="module" @click="tui">
                     <img src="../../../src/assets/img/hw.png"/>
                     <p>好物推荐</p>
+                </div>
+            </div>
+            <div style="margin-top: 25px">
+                <div class="module" style="margin-right: 25px" @click="firstFish">
+                    <img src="../../../src/assets/img/js.png"/>
+                    <p>解锁鱼种</p>
+                </div>
+                <div class="module"  @click="waterLevelNew">
+                    <img src="../../../src/assets/img/swn.png"/>
+                    <p>水文水位</p>
                 </div>
             </div>
         </div>
@@ -813,6 +824,15 @@
                 this.$router.push({name: 'max'})
             },tui(){
                 this.$router.push({name: 'tui'})
+            },firstFish(){
+                this.$router.push({name: 'firstFish'})
+            },biaodian(){
+                this.$toast({
+                    message: '还想看标点，想得美！',
+                    icon: 'warning-o'
+                });
+            },waterLevelNew(){
+                this.$router.push({name: 'waterLevelNew'})
             }
            /* getAddress(){
                 AMap.plugin('AMap.Geocoder', function() {
