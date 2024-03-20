@@ -4,7 +4,8 @@ const method = {
     user:{
         login: '/login',
         changePassWord:  '/api/web/user/changePassword',
-        addFisher:  '/api/web/user/addFisher'
+        addFisher:  '/api/web/user/addFisher',
+        userList: '/api/userList'
     },
     merchant:{
         submit: '/merchant/merchantApply',

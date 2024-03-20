@@ -44,7 +44,7 @@ export default new Router({
             name: 'selectAction',
             component: () => import('./views/entrance/select-action.vue'),
             meta: {
-                title: '卤鸭大王'
+                title: '路了个鸭'
             }
         },
 

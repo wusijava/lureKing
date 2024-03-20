@@ -13,3 +13,7 @@ export async function addFisher(params){
     const result = await axios.post(api.user.addFisher, params)
     return result
 }
+export async function userList(params){
+    const result = await axios.post(api.user.userList,params);
+    return result;
+}

@@ -5,7 +5,7 @@
                 text="使用过程中,遇到任何问题,请联系开发人员:吴思,联系电话:18602702325"
         />
         <div class="content">
-            <h3>卤鸭大王</h3>
+            <h3>路了个鸭</h3>
             <van-form @submit="toLogin" class="login">
                 <van-field
                         v-model="username"

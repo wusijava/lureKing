@@ -11,25 +11,42 @@
         <van-popup v-model="show" position="top" :style="{ height: '100%'}" :close-on-click-overlay="false">
             <van-form class="filter" @submit="toSearch(0)">
                 <!-- 1 -->
-                <van-field
+             <!--   <van-field
                         name="鱼种"
                         placeholder="输入鱼种命名"
                         clearable
                         type="text"
                         v-model.trim="query.fishKind"
-                />
-               <!-- <van-field
-                        name="鱼种"
-                        placeholder="输入大师名字"
-                        clearable
-                        type="text"
-                        v-model.trim="query.userName"
                 />-->
+                <van-field
+                        readonly
+                        clickable
+                        :value="userName"
+                        placeholder="请选择大师"
+                        @click="showUser = true"
+                >
+                </van-field>
+                <van-popup
+                        v-model="showUser"
+                        position="bottom"
+                        :style="{ height: '50%' }"
+                        round
+                >
+                    <van-picker
+                            v-model="userName"
+                            show-toolbar
+                            :columns="userList"
+                            value-key="name"
+                            @cancel="showUser = false"
+                            @confirm="confirmUser"
+                    />
+                </van-popup>
+
 
                 <van-field
                         readonly
                         clickable
-                        :value="area"
+                        :value="fishKind"
                         placeholder="请选择鱼种"
                         @click="showArea = true"
                 >
@@ -40,72 +57,15 @@
                         :style="{ height: '50%' }"
                         round
                 >
-                    <van-area :area-list="fishList"
-                              value="420000"
-                              :columns-num="1"
-                              @confirm="confirmArea"
-                              @cancel="onCancelArea"
+                    <van-picker
+                            v-model="fishKind"
+                            show-toolbar
+                            :columns="areaList"
+                            value-key="name"
+                            @cancel="showArea = false"
+                            @confirm="confirmArea"
                     />
                 </van-popup>
-
-                <van-popup v-model="showStartDate" position="bottom">
-                    <van-datetime-picker
-                            title="选择时间"
-                            type="date"
-                            :min-date="minDate"
-                            :max-date="maxDate"
-                            @confirm="onConfirmDate"
-                            @cancel="onCancelDate"
-                    />
-                </van-popup>
-                <!-- 选择结束时间弹窗 -->
-                <van-popup v-model="showEndDate" position="bottom">
-                    <van-datetime-picker
-                            title="选择时间"
-                            type="date"
-                            :min-date="minDate"
-                            :max-date="maxDate"
-                            @confirm="onEndDate"
-                            @cancel="onCancelDate"
-                    />
-                </van-popup>
-                <!-- 选择地区弹窗 -->
-             <!--   <van-field
-                        readonly
-                        clickable
-                        :value="area"
-                        placeholder="请选择消费者"
-                        @click="showArea = true"
-                >
-                </van-field>
-                <van-popup
-                        v-model="showArea"
-                        position="bottom"
-                        :style="{ height: '50%' }"
-                        round
-                >
-                    <van-area :area-list="areaList"
-                          value="420000"
-                          :columns-num="1"
-                          @confirm="confirmArea"
-                          @cancel="onCancelArea"
-                    />
-                </van-popup>-->
-
-
-
-<!--                <div class="radio">-->
-<!--                    <p>请选择业务类型</p>-->
-<!--                    <div class="radio-check" v-for="(item,index) in bizTypeList" :key="item.type"-->
-<!--                         :class="activeType==index ? 'activeClass' : '' ">-->
-<!--                        <input type="radio" name="num"-->
-<!--                               :value="item.bizType"-->
-<!--                               @click="changeType(index,item.type)"-->
-<!--                        >-->
-<!--                        <label>{{item.bizType}}</label>-->
-<!--                    </div>-->
-<!--                </div>-->
-
                 <div class="search">
                     <van-row>
                         <van-col span="10">
@@ -134,7 +94,7 @@
         </van-popup>
 
         <div class="content">
-            <van-empty image="search" description="暂无消费记录" v-show="showEmpty"/>
+            <van-empty image="search" description="暂无鱼获记录" v-show="showEmpty"/>
             <div class="list" v-for="item in list" :key="item.id">
                 <van-swipe-cell :before-close="beforeClose">
                     <van-cell-group >
@@ -168,12 +128,16 @@
 
 <script>
     import moment from 'moment';
-    import areaJson from '@/util/area'
     import {fishShare,taoDetail} from "../../api/order";
+    import {getFishList} from "../../api/trade";
+    import {userList} from "../../api/user";
     export default {
         name: 'taoList',
         data() {
             return {
+                userList: [],
+                userName: '',
+                showUser: false,
                 list: [],
                 fontColor:{
                     color: '#666'
@@ -189,7 +153,7 @@
                 minDate: new Date(2020, 0, 1),
                 maxDate: new Date(2025, 10, 1),
                 showArea: false,
-                areaList: areaJson,
+                areaList: [],
                 area: '',
                 areaCode: '',
                 activeState: 0,
@@ -219,11 +183,15 @@
                     storeCounty: '',//区
                     storeCountyCode: '',
                 },
-                showEmpty: false
+                showEmpty: false,
+                fishList: {},
+                fishKind: ''
             }
         },
         mounted() {
             this.getList(this.currentPage - 1, 10);
+            this.getFishList();
+            this.getUserList();
        /*     if(ap) {
                 ap.setOptionButton({
                     items: [{
@@ -289,11 +257,11 @@
                 params.page = cp;
                 params.limit = c;
                 params.getFish =1
-                if (this.query.fishKind){
-                    params.fishKind = this.query.fishKind;
+                if (this.fishKind){
+                    params.fishKind = this.fishKind;
                 }
-                if (this.query.userName){
-                    params.userName = this.query.userName;
+                if (this.userName){
+                    params.userName = this.userName;
                 }
                 this.$toast.loading({
                     duration: 0, // 持续展示 toast
@@ -324,23 +292,21 @@
             changePage: function (cp) {
                 this.getList((cp-1), 1)
             },
-            confirmArea(arr) {
-                this.area = '';
-                if (arr[0]) {
-                    this.area += arr[0].name;
-                    this.query.storeProvince = arr[0].name;
-                    this.query.storeProvinceCode = arr[0].code;
-                }
-                if (arr[1]) {
-                    this.area += '-' + arr[1].name;
-                    this.query.storeCity = arr[1].name;
-                    this.query.storeCityCode = arr[1].code;
-                }
+            confirmArea(value) {
+                this.fishKind = value.name;
                 this.showArea = false;
             },
             onCancelArea() {
                 this.showArea = false;
-                this.area = '';
+                this.fishKind = '';
+            },
+            confirmUser(value) {
+                this.userName = value.name;
+                this.showUser = false;
+            },
+            onCancelUser() {
+                this.showUser = false;
+                this.userName = '';
             },
             changeState(index,i){
                 //把index值赋给active，点击改变样式
@@ -390,6 +356,18 @@
                         break;
                 }
             },
+            async getFishList(){
+                const result = await getFishList()
+                if(result.data.code == '20000') {
+                    this.areaList=result.data.data
+                }
+            },
+            async getUserList(){
+                const result = await userList()
+                if(result.data.code == '20000') {
+                    this.userList=result.data.data
+                }
+            }
         }
     }
 </script>

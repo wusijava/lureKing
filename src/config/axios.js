@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const baseURL = 'https://api.lureking.cn'
-//const baseURL = 'http://192.168.0.7:8085'
+//const baseURL = 'https://api.lureking.cn'
+const baseURL = 'http://192.168.0.7:8085'
 
 function setHeaders() {
     const header = {}

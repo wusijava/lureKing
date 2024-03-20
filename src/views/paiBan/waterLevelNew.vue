@@ -19,14 +19,14 @@
 
             </div>
             </table>
-            <van-cell title="搜索,点击右侧，弹出日历-＞" :value="date" @click="show = true" style="margin-top: 20px;margin-bottom: 20px"/>
-            <van-calendar v-model="show" @confirm="onConfirm1" type="range" allow-same-day  :min-date="minDate"/>
-            <van-button class="button" @click="toSearch(0)" type="warning" size="large" style="margin-bottom: 10px">日期查询</van-button>
+            <van-cell title="搜索,点击右侧，弹出日历-＞" :value="date" @click="show = true" />
+            <van-calendar v-model="show" @confirm="onConfirm1" type="range" allow-same-day  :min-date="minDate" style="margin-bottom: 20px"/>
+            <van-button class="button" @click="toSearch(0)" type="warning" size="large" style="margin-bottom: 10px;margin-top: 30px">日期查询</van-button>
            <!-- <van-button class="button" @click="getWaterLevel" type="primary" size="large" style="margin-bottom: 10px">获取水位</van-button>-->
             <van-button class="button" @click="back" type="info" size="large" >返回菜单</van-button>
-        <van-dialog v-model="inputPassword" title="今日水位" show-cancel-button @confirm="submitShow" @cancel="cancelInput">
+       <!-- <van-dialog v-model="inputPassword" title="今日水位" show-cancel-button @confirm="submitShow" @cancel="cancelInput">
             <van-field v-model="lookPwd" label="今日水位" type="text" autofocus clearable/>
-        </van-dialog>
+        </van-dialog>-->
 
         <div class="footer">
             <van-pagination v-model="currentPage" :page-count="pageTotal" mode="simple" @change="changePage"/>
@@ -74,7 +74,7 @@
             }
         },
         mounted() {
-            this.getList(this.currentPage - 1, 10);
+            this.getList(this.currentPage - 1, 1);
         },
         methods: {
 
@@ -82,7 +82,7 @@
                 if (isSearch == 0) {
                     this.currentPage = 0;
                 }
-                this.getList(this.currentPage, 10)
+                this.getList(this.currentPage, 1)
             },
             getList: async function(cp,c) {
                 let params = {};
@@ -122,13 +122,13 @@
                 }
             },
             changePage: function (cp) {
-                this.getList((cp-1), 10)
+                this.getList((cp-1), 1)
             },
             back(){
                 this.$router.push({name:'selectAction'});
             },
             changeValue:async function(){
-                this.getList(this.currentPage - 1, 10);
+                this.getList(this.currentPage - 1, 1);
             },
             toDetails(url){
                 this.showDetails=true
@@ -163,7 +163,7 @@
                         message: "修改成功",
                         icon: 'warning-o'
                     });
-                    this.getList(this.currentPage - 1, 10);
+                    this.getList(this.currentPage - 1, 1);
                     this.lookPwd=''
                     this.inputPassword=false
                 }else {

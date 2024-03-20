@@ -44,7 +44,7 @@
         <van-cell-group style="margin-top: 10px" v-if="openImgState == true">
             <van-row type="flex" justify="space-between">
                 <van-col span="10" class="upload-left">
-                    <p class="upload-title">标点图片上传</p>
+                    <p class="upload-title" style="color:red;font-size:x-large">标点图上传(可不传)</p>
                     <van-uploader v-if="signImg != ''"
                                   :before-read="beforeUploadImg"
                                   :after-read="uploadImg"
@@ -108,7 +108,7 @@
         </van-popup>
         <van-cell  > 如需补录，请点击日期修改 ↑</van-cell>
         <van-cell style="color: #cf2d28;margin-top: 10px;size: 40px" v-if="this.province!=null" > {{this.province}}</van-cell>
-        <van-cell style="color: #cf2d28;margin-top: 10px;size: 40px;" v-if="this.province==null"> 自动获取定位失败，无法存储位置信息!</van-cell>
+        <van-cell style="color: #cf2d28;margin-top: 10px;size: 40px;" v-if="this.province==null"> 未开启定位权限，无法存储位置信息!</van-cell>
         <div class="box2" style="margin: 15px">
             <van-button class="button" @click="submit" type="info" size="large" :loading="loading">又是打龟的一天！操！</van-button>
         </div>
@@ -320,7 +320,7 @@
             },
             async submit() {
                 let params = {};
-                if(this.openImgState == true) {
+                /*if(this.openImgState == true) {
                     if(this.signImg == '' || this.signImg == null) {
                         this.$toast({
                             message: '请上传图片',
@@ -329,7 +329,8 @@
                         return;
                     }
                     params.url = this.signImg
-                }
+                }*/
+                params.url = this.signImg
                 params.remark=this.remark
                 params.lng = localStorage.getItem("lng")
                 params.lat = localStorage.getItem("lat")
